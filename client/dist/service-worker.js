@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.bee5bcdc062ff374ae04cbcade537e3f.js"
+  "/precache-manifest.e521d0ba9226ecd1e9299694de2d4f50.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "chat"});
