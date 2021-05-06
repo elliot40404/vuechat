@@ -26,33 +26,30 @@ const users = {
   AVI008: [],
 };
 
-// io.on("connection", (socket) => {
-//   if (users.AVI008.length < 2) {
-//     console.log("got connection");
-//     socket.join(rooms[0]);
-//     users.AVI008.push(socket.id);
-//   }
-//   socket.on('cred', (data) => {
-//     console.log(data.name, data.room);
-//     io.emit('text',`${data.name} connected`);
-//   })
-//   socket.on("msg", (data) => {
-//       if (users.AVI008.find(room => room === socket.id)) {
-//         socket.to("AVI008").emit("text", data);
-//       }
-//   });
-// });
+// ! Room check
+app.post("/api/room", (req, res) => {
+  if (rooms.includes(req.query.code)) {
+    res.json(true)
+  } else {
+    res.json(false)
+  }
+});
+
+//  ! SOCKETS
+
 //  TODO: implement middleware to auth
 io.on("connection", (socket) => {
   console.log("got connection", socket.handshake.query);
-  if (rooms.find(room => room === socket.handshake.query.room)) {
+  if (rooms.includes(socket.handshake.query.room)) {
     socket.join(socket.handshake.query.room);
-    socket.to(socket.handshake.query.room).emit("text", `${socket.handshake.query.name} connected`);
+    socket
+      .to(socket.handshake.query.room)
+      .emit("text", `${socket.handshake.query.name} connected`);
   }
   // TODO: join room accordingly
   socket.on("msg", (data) => {
     // if (users.AVI008.find((room) => room === socket.id)) {
-      socket.to(data.room).emit("text", data.msg);
+    socket.to(data.room).emit("text", data.msg);
     // }
   });
 });
